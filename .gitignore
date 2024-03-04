@@ -1,0 +1,8 @@
+/Release
+/Debug
+/with WinMD
+*.dproj.local
+*.dsk
+*.dsv
+*.identcache
+*.~dsk
