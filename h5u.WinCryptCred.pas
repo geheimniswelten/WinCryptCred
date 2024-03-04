@@ -597,9 +597,9 @@ end;
 
 class function WinCrypt.CryptData(var Data: TBytes; Encrypt: Boolean; Flags: DWORD; Prompt: PCRYPTPROTECT_PROMPTSTRUCT; const Desription: string): Boolean;
 var
-  CurData, NewData, Entropy: {$IFDEF UseWinMD}Windows.Foundation.{$IFEND}CRYPT_INTEGER_BLOB;
+  CurData, NewData, Entropy: {$IFDEF UseWinMD}Windows.Foundation.{$ENDIF}CRYPT_INTEGER_BLOB;
   ReadDesription: PWideChar;
-  State: {$IFDEF UseWinMD}Windows.Foundation.{$IFEND}BOOL;
+  State: {$IFDEF UseWinMD}Windows.Foundation.{$ENDIF}BOOL;
 begin
   if not Assigned(Data) then
     Exit(True);
@@ -614,7 +614,7 @@ begin
   else
     State := CryptUnprotectData(@CurData, @ReadDesription, @Entropy, nil, Prompt, Flags, NewData);
 
-  if Assigned(Prompt) and not {$IFDEF UseWinMD}BOOL{$IFEND}(State) and (GetLastError = ERROR_CANCELLED) then
+  if Assigned(Prompt) and not {$IFDEF UseWinMD}BOOL{$ENDIF}(State) and (GetLastError = ERROR_CANCELLED) then
     Exit(False)
   else
     Win32Check(State);
@@ -859,7 +859,7 @@ end;
 
 class procedure WinCrypt.DeleteInCredentialsStore(const Target: string);
 begin
-  if not {$IFDEF UseWinMD}BOOL{$IFEND}(CredDelete(PChar(Target), CRED_TYPE_GENERIC, 0)) and (GetLastError <> {ERROR_NOT_FOUND}1168) then
+  if not {$IFDEF UseWinMD}BOOL{$ENDIF}(CredDelete(PChar(Target), CRED_TYPE_GENERIC, 0)) and (GetLastError <> {ERROR_NOT_FOUND}1168) then
     RaiseLastOSError;
 end;
 
@@ -974,7 +974,7 @@ begin
 
   if Username <> '' then begin
     Size := 0;                                                                                                    //Pointer(Password) : aktuelle Windows10 hätten liebendgern bei einem LeerString ein NIL, aber WindowsServer2008 knallt, wenn es NIL ist
-    if not {$IFDEF UseWinMD}BOOL{$IFEND}(CredPackAuthenticationBuffer(CRED_PACK_GENERIC_CREDENTIALS, PChar(Username), PChar(Password), nil, Size)) and (GetLastError <> ERROR_INSUFFICIENT_BUFFER) then
+    if not {$IFDEF UseWinMD}BOOL{$ENDIF}(CredPackAuthenticationBuffer(CRED_PACK_GENERIC_CREDENTIALS, PChar(Username), PChar(Password), nil, Size)) and (GetLastError <> ERROR_INSUFFICIENT_BUFFER) then
       RaiseLastOSError;
     SetLength(InitAuth, Size);
     Win32Check(CredPackAuthenticationBuffer(CRED_PACK_GENERIC_CREDENTIALS, PChar(Username), PChar(Password), @InitAuth[0], Size));

@@ -4,13 +4,14 @@ interface
 
 uses
   {$IFDEF WithWinMD} Windows.Security.Cryptography, Windows.Security.Credentials, {$ENDIF}
-  Windows, Messages, SysUtils, StrUtils, Variants, Classes, Graphics, Controls, Math, TypInfo,
-  Forms, Dialogs, StdCtrls, ExtCtrls, Grids, ValEdit, ComCtrls, ImgList, System.ImageList,
-  //
-  Generics.Collections, System.NetEncoding, h5u.WinCryptCred;
+  Winapi.Windows, Winapi.Messages,
+  System.SysUtils, System.StrUtils, System.Variants, System.Classes, System.Math, System.TypInfo,
+  System.UITypes, System.ImageList, Generics.Collections, System.NetEncoding,
+  Vcl.Graphics, Vcl.Controls, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.ValEdit, Vcl.ComCtrls, Vcl.ImgList,
+  h5u.WinCryptCred;
 
 type
-  TButton = class(StdCtrls.TButton)
+  TButton = class(Vcl.StdCtrls.TButton)
   protected
     procedure CreateParams(var Params: TCreateParams); override;
   end;
