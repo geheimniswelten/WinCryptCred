@@ -183,11 +183,11 @@ function CredIsProtectedW(             pszProtectedCredentials: LPWSTR;         
 
 {$ELSE}
 
-  // Bugfixe, weil die Idioten im WinMD überall einfach nur Mist gemaut haben.
+  // Bugfixe, weil die Idioten im WinMD Ã¼berall einfach nur Mist gemaut haben.
 
   const CREDUI_MAX_PASSWORD_LENGTH = 256;
 
-  { Wer kommt bitte auf die saublöde IDEE $IF innerhalb inaktiver Blöcke auszuwerten? }
+  { Wer kommt bitte auf die saublÃ¶de IDEE $IF innerhalb inaktiver BlÃ¶cke auszuwerten? }
   {.$IF TypeInfo(Windows.BOOL) <> TypeInfo(Windows.Foundation.BOOL)}
     type  BOOL  = Windows.BOOL;
     const True  = System.True;
@@ -197,7 +197,7 @@ function CredIsProtectedW(             pszProtectedCredentials: LPWSTR;         
   {.$ENDIF}
 
 
-  // Bugfixe, weil die von emba einfach zu dämlich sind
+  // Bugfixe, weil die von emba einfach zu dÃ¤mlich sind
   type PSTR         = PAnsiChar;
   type PCREDENTIAL  = PCREDENTIALW;
   type PPCREDENTIAL = ^PCREDENTIALW;
@@ -241,6 +241,7 @@ type
   PCryptAttributes = ^TCryptAttributes;
   TCryptAttributes = TArray<TCryptAttribute>;
 
+  // Bugfix: mit DummyWerten aufgefÃ¼llt, damit die SET 32 Bit werden.   {$MINENUMSIZE} hat leider nur Ausworkung auf ENUM, aber nicht SET.
   TCryptCredFlag    = (ccf0{ccfPasswordForCert}, ccfPromptNow{=1}, ccfUsernameTarget{=2} {, ccfOwfCredBlob, ccfRequireConfirm, ccfWildcardMatch, ccfVsmProtected, ccfNgcCert}, ccf3, ccf4, ccf5, ccf6, ccf7, ccf8, ccf9, ccf10, ccf11, ccf12, ccf13, ccf14, ccf15, ccf16, ccf17 {, ccf31=31});
   TCryptCredFlags   = set of TCryptCredFlag;
   TCryptCredCType   = (cct0, cctGeneric{=1}, cctDomainPassword, cctDomainCertificate, cctDomainVisiblePassword, cctGenericCertificate, cctDomainExtended, cct7, cct8, cct9, cct10, cct11, cct12, cct13, cct14, cct15, cct16, cct17, {...} cct31{=31});
@@ -289,13 +290,13 @@ type
     class var EntropyForEncrypt: RawByteString;
     class constructor Create;
 
-    /// <summary> Arbeitsspeicher verschlüsseln </summary>
+    /// <summary> Arbeitsspeicher verschlÃ¼sseln </summary>
     /// <param name="Len"> Vielfaches von 16 </param>
     /// <remarks> wird auch von DevExpress (dxCryptoAPI) und EurekaLog (EWinCrypt/EEncrypt) verwendet </remarks>
     class procedure EncryptProcessMemory(Data: Pointer; Len: Integer; Flag: TCryptFlag=OnlyThisProcess);
     class procedure DecryptProcessMemory(Data: Pointer; Len: Integer; Flag: TCryptFlag=OnlyThisProcess);
 
-    /// <summary> Daten mit User-/Computer-Key verschlüsseln </summary>
+    /// <summary> Daten mit User-/Computer-Key verschlÃ¼sseln </summary>
     class procedure EncryptUserData    (var Data: TBytes); inline;
     class procedure DecryptUserData    (var Data: TBytes); inline;
     class procedure EncryptComputerData(var Data: TBytes); inline;
@@ -303,7 +304,7 @@ type
     class function  EncryptWithPrompt  (var Data: TBytes; ParentForm: TCustomForm=nil; Caption: string='';   Desription: string='';  WithPassword: Boolean=False):  Boolean;
     class function  DecryptWithPrompt  (var Data: TBytes; ParentForm: TCustomForm=nil; Caption: string='' {; out Desription: string; WithPassword: Boolean=False}): Boolean;
 
-    /// <summary> Schlüsselspeicher / Credentials </summary>
+    /// <summary> SchlÃ¼sselspeicher / Credentials </summary>
     /// <remarks> auch im UniGUI zu finden </remarks>
     class procedure  WriteToCredentialsStore(const Target: string; const Username, Password: string;                                   doProtect: Boolean=False); overload;
     class procedure  WriteToCredentialsStore(const Target: string; const Username, Password: string; Attrib: array of TCryptAttribute; doProtect: Boolean=False); overload;
@@ -579,9 +580,9 @@ class procedure WinCrypt.BuildPrompt(out Prompt: CRYPTPROTECT_PROMPTSTRUCT; Encr
 begin
   if Caption = '' then
     if Encrypt then
-      Caption  := 'Daten verschlüsseln'  // hier nur echte Konstanten verwenden, wergen des PChar am Ende
+      Caption  := 'Daten verschlÃ¼sseln'  // hier nur echte Konstanten verwenden, wergen des PChar am Ende
     else
-      Caption  := 'Daten entschlüsseln';
+      Caption  := 'Daten entschlÃ¼sseln';
 
   Prompt.cbSize          := SizeOf(Prompt);
   if Encrypt then
@@ -972,7 +973,7 @@ begin
     UIInfo.hbmBanner    := Banner.Handle;
 
   if Username <> '' then begin
-    Size := 0;                                                                                                    //Pointer(Password) : aktuelle Windows10 hätten liebendgern bei einem LeerString ein NIL, aber WindowsServer2008 knallt, wenn es NIL ist
+    Size := 0;                                                                                                    //Pointer(Password) : aktuelle Windows10 hÃ¤tten liebendgern bei einem LeerString ein NIL, aber WindowsServer2008 knallt, wenn es NIL ist
     if not {$IFDEF UseWinMD}BOOL{$IFEND}(CredPackAuthenticationBuffer(CRED_PACK_GENERIC_CREDENTIALS, PChar(Username), PChar(Password), nil, Size)) and (GetLastError <> ERROR_INSUFFICIENT_BUFFER) then
       RaiseLastOSError;
     SetLength(InitAuth, Size);
